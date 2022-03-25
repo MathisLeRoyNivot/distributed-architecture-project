@@ -50,3 +50,12 @@ First, download the following **[file](https://www.data.gouv.fr/fr/datasets/base
 
 
 </div>
+
+
+
+
+## Exec Scala
+
+```cmd
+spark-shell -i transData.scala --conf spark.driver.codenaf="56.10C"
+```
