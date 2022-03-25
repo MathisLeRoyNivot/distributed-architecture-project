@@ -76,7 +76,7 @@
         }
 
         // Init
-        loadFile("./part-00000-fbb11be9-7a58-4e83-b967-e6bbb70fcedf-c000.csv", populationDATA => {
+        loadFile("./fastFoodByDep.csv", populationDATA => {
             loadFile("./datacsv.csv/part-00000-4df33126-c631-4c31-b2f8-40d327863c7d-c000.csv", companyDATA => {
                 loadFile("./departements.geojson", geoDATA => {
                     loadMap(
