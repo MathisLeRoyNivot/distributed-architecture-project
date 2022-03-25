@@ -4,127 +4,85 @@
     <meta charset="utf-8">
     <title>poc</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css" />
-    <script src="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet-src.min.js"></script>
+    <script src="./util.js"></script>
 </head>
 
 <body>
     <div id="map"></div>
 
     <script>
-        let populationData = null;
-        let fastfoodData = null;
-        let geoData = null;
-        
-        const colorGradient = fadeFraction => {
-            const color1 = {red: 0, green: 0, blue: 255}
-            const color2 = {red: 255, green: 0, blue:0}
-            const fade = fadeFraction;
+        const loadMap = (geoDATA, populationDATA, companyDATA) => {
 
-            const diffRed = color2.red - color1.red;
-            const diffGreen = color2.green - color1.green;
-            const diffBlue = color2.blue - color1.blue;
+            const density = {}
 
-            const gradient = {
-                red: parseInt(Math.floor(color1.red + (diffRed * fade)), 10),
-                green: parseInt(Math.floor(color1.green + (diffGreen * fade)), 10),
-                blue: parseInt(Math.floor(color1.blue + (diffBlue * fade)), 10),
-            };
-
-            return `rgb(${gradient.red}, ${gradient.green}, ${gradient.blue})`;
-        }
-
-        const loadMap = () => {
-
-            console.log(geoData);
-            // console.log(populationData);
-            // console.log(fastfoodData);
-
-            const data = [];
-            // fastfoodData.forEach((ffRawData, i) => {
-            //     const cols = ffRawData.split(",");
-            //     console.log(cols)
-            // });
-
-            let min;
-            let max;
-
-            populationData.forEach((data, i) => {
-                if (!i) return;
-                const [code, name, population, fastfood] = data.split(",");
-                const n = fastfood / population;
+            // Heatmap colors
+            let min, max;
+            populationDATA.forEach(([code, name, population, count]) => {
+                const n = count / population;
+                    density[code] = Math.round(n * 100000);
                 if (min === undefined || n < min) min = n;
                 if (max === undefined || n > max) max = n;
             });
-
-            console.log(min, max)
-
-            populationData.forEach((data, i) => {
-                if (!i) return;
-                const [code, name, population, fastfood] = data.split(",");
-                const feature = geoData.features.find(feature => feature.properties.code === code);
+ 
+            populationDATA.forEach(([code, name, population, count]) => {
+                const feature = geoDATA.features.find(feature => feature.properties.code === code);
                 if (feature) {
-                    const n = (fastfood / population - min) / (max - min);
-                    // console.log(name, n);
+                    const n = (count / population - min) / (max - min);
                     feature.properties.fillColor = colorGradient(n);
-                    feature.properties.fillOpacity = 1;
-                    feature.properties.opacity = 1;
-                    feature.properties.color = colorGradient(n)
                 }
             });
 
-            const map = L.map("map").setView([46.7111, 1.7191], 6); // Center of France
-
-            const OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            // Leaflet map
+            const map = L.map("map").setView([47, 0], 6);
+            const OpenStreetMap_Mapnik = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
                 minZoom: 3,
-                maxZoom: 15,
+                maxZoom: 15
             }).addTo(map);
 
-            const data_lyr = L.geoJson(geoData, {
-                // onEachFeature: (feature, featureLayer) => featureLayer.bindPopup(feature.properties.NAME_1),
+            // Map popup
+            const data_lyr = L.geoJson(geoDATA, {
+                onEachFeature: (feature, layer) => {
+                    const divElem = document.createElement("div");
+
+                    const titleElem = document.createElement("h1");
+                    titleElem.innerHTML = `${feature.properties.nom} (${feature.properties.code})<br>${density[feature.properties.code]} <span style="font-size:0.5em">pour 100K hab</span>`;
+                    divElem.appendChild(titleElem);
+
+                    const scrollElem = document.createElement("div");
+                    scrollElem.style.height = "128px";
+                    scrollElem.style.overflowY = "scroll";
+                    divElem.appendChild(scrollElem);
+
+                    const companies = companyDATA.filter(e => e[2].substring(0, 2) === feature.properties.code);
+                    companies.forEach(([siret, name, code]) => {
+                        const elem = document.createElement("p");
+                        elem.style.margin = 0;
+                        elem.innerHTML = name;
+                        elem.title = siret;
+                        elem.style.cursor = "help";
+                        scrollElem.appendChild(elem);
+                        scrollElem.appendChild(document.createElement("br"));
+                    });
+
+                    layer.bindPopup(divElem);
+                },
                 pointToLayer: (feature, latlng) => L.marker(latlng),
-                style: feature => ({ 
-                    fillColor: feature.properties.fillColor,
-                    fillOpacity: 0.5,
-                    color: feature.properties.fillColor,
-                    opacity: 1,
-                })
+                style: feature => ({ fillColor: feature.properties.fillColor, weight: 2, opacity: 1, color: 'white', fillOpacity: 0.7 })
             }).addTo(map);
         }
 
-        const loadJson = (path, callback) => {
-            const xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4 && xhr.status >= 200 && xhr.status < 300) {
-                    callback(JSON.parse(xhr.responseText));
-                }
-            }
-            xhr.open("GET", path);
-            xhr.send();
-        }
-
-        const loadFile = (path, callback) => {
-            const xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4 && xhr.status >= 200 && xhr.status < 300) {
-                    callback(xhr.responseText.split(/\r\n/));
-                }
-            }
-            xhr.open("GET", path);
-            xhr.send();
-            // function showData(data) {
-            //     for (rowNum = 0; rowNum < rows.length; ++rowNum) {
-            //         cells = rows[rowNum].split(",");
-            //     }
-            // }
-        }
-        loadFile("./part-00000-fbb11be9-7a58-4e83-b967-e6bbb70fcedf-c000.csv", resPop => {
-            loadFile("./datacsv.csv/part-00000-4df33126-c631-4c31-b2f8-40d327863c7d-c000.csv", resFF => {
-                loadJson("./departements.geojson", resJson => {
-                    geoData = resJson;
-                    populationData = resPop;
-                    fastfoodData = resFF;
-                    loadMap();
+        // Init
+        loadFile("./part-00000-fbb11be9-7a58-4e83-b967-e6bbb70fcedf-c000.csv", populationDATA => {
+            loadFile("./datacsv.csv/part-00000-4df33126-c631-4c31-b2f8-40d327863c7d-c000.csv", companyDATA => {
+                loadFile("./departements.geojson", geoDATA => {
+                    loadMap(
+                        JSON.parse(geoDATA),
+                        populationDATA.split(/\r\n/).map(e => e.split(",")).filter(e => e.length === 4 && !isNaN(e[0])),
+                        companyDATA.split(/\r\n/).map(e => e.split(",")).filter(e => e.length === 3 && !isNaN(e[2])));
                 });
             });
         });
