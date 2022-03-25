@@ -1,5 +1,5 @@
 
-val df = spark.read.option("header",true).csv("./SHORT_StockEtablissement_utf8.csv")
+val df = spark.read.option("header",true).csv("./StockEtablissement_utf8.csv")
 df.createOrReplaceTempView("sirene")
 // Recup des fast food
 
