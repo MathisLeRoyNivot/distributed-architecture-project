@@ -45,7 +45,7 @@ Once you downloaded the file, place it at the root of the repository.
 If you don't want to download the document, we have given you access to a "SHORT" version which has only the first 1000 lines of the dataset. To use it please change the path in public/file.scala & public/transData.scala
 
 
-> StockEtablissement_utf8.csv --> SHORT/StockEtablissement_utf8.csv
+> StockEtablissement_utf8.csv --> SHORT_StockEtablissement_utf8.csv
 
 <div id="scala-execution">
 
