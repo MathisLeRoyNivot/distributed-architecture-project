@@ -1,6 +1,6 @@
-val filePath = "./StockEtablissement_utf8.csv"
-val nafCompanyCode = "56.10C"
-val savePath = "" // C:/Users/samy/Desktop/datascience/datacsv.csv
+val filePath = "./public/StockEtablissement_utf8.csv"
+val nafCompanyCode = sc.getConf.get("spark.driver.codenaf")
+val savePath = "./public/fastfoodNames"
 
 val df = spark.read
     .option("header",true)

@@ -1,0 +1,27 @@
+{
+  "name": "distributed-architecture-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./server.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MathisLeRoyNivot/distributed-architecture-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MathisLeRoyNivot/distributed-architecture-project/issues"
+  },
+  "homepage": "https://github.com/MathisLeRoyNivot/distributed-architecture-project#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "path": "^0.12.7"
+  }
+}

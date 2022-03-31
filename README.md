@@ -46,10 +46,46 @@ Once you downloaded the file, place it at the root of the repository.
 <div id="scala-execution">
 
 # Run project :arrow_forward:
+## Default
+In this project, you can have direct access to a default visualization. 
+
+You have to execute the following commands in a command prompt positioned in our project: 
 
 ```bash
-spark-shell -i transData.scala --conf spark.driver.codenaf="56.10C"
+npm install
+npm start
 ```
+
+Open a browser and go to the following url 
+>http://localhost:8888/
+
+Then a map representing the number of fastfoods per 100 000 inhabitants opens.   
+You can click on the different regions to see the Fast Food located here.
+
+## Spécial
+The POC also allows to filter on another NAF code. For that, you just have to launch our scala file.
+
+- Start by dropping the document you just downloaded. Make sure that the document is in public/ in the project and that it has the name StockEtablissement_utf8.csv. 
+- You can execute the Scala file with the following command in a command prompt positioned in our project: ( be careful you have to execute them in two steps! )
+
+You can modify the codenaf to work on another body, here is the list: https://blog.easyfichiers.com/wp-content/uploads/2014/08/Liste-code-naf-ape.pdf ! Be careful the following link does not put any point of their NAF code but they are present in our dataset! Think to add them.
+
+
+```bash
+    spark-shell -i public/file.scala --conf spark.driver.codenaf="56.10C"
+    spark-shell -i public/transData.scala --conf spark.driver.codenaf="56.10C"
+```
+
+
+When finished, the project has generated a floor file! To connect the documents you just generated with the graphical part you will have to change the paths in the file 
+
+> public/client/js/main.js lines[61-62]
+
+<img src="./docs/screenCode.png" width=550>
+
+you will just have to refresh the page already launched with the default values! 
+
+
 
 </div>
 

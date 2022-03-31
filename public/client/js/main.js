@@ -58,9 +58,9 @@ const loadMap = (geoDATA, populationDATA, companyDATA) => {
 }
 
 // Init
-loadFile("../../fastFoodByDep.csv", populationDATA => {
-    loadFile("../../datacsv.csv/part-00000-4df33126-c631-4c31-b2f8-40d327863c7d-c000.csv", companyDATA => {
-        loadFile("../../ressources/departements.geojson", geoDATA => {
+loadFile("./fastFoodByDep/part-00000-d4f88557-a2f3-423d-9e2f-83e7a7ba90b5-c000.csv", populationDATA => {
+    loadFile("./fastfoodNames/part-00000-918eeb01-692a-4936-8885-b562a091af21-c000.csv", companyDATA => {
+        loadFile("./ressources/departements.geojson", geoDATA => {
             loadMap(
                 JSON.parse(geoDATA),
                 populationDATA.split(/\r\n/).map(e => e.split(",")).filter(e => e.length === 4 && !isNaN(e[0])),
