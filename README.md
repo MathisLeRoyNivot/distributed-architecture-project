@@ -13,7 +13,7 @@
 <hr />
 
 - **[📄 Report [🇫🇷 FR Version]](https://gem-zoo-d8b.notion.site/Architecture-distribu-e-Projet-Fil-Rouge-ed4ea0889c494f29a3d2e2e2d9905940)**
-- **[📄 Report [🇬🇧 EN Version]]()**
+- **[📄 Report [🇬🇧 EN Version]](https://gem-zoo-d8b.notion.site/Distributed-Architecture-Major-Project-2444f67ae49d43c8baa30daf56a07aa6)**
 
 <hr />
 
@@ -37,6 +37,10 @@ First, download the following **[file](https://www.data.gouv.fr/fr/datasets/base
 </a>
 
 </div>
+
+Once you downloaded the file, place it at the root of the repository.
+
+## 
 
 </div>
 
