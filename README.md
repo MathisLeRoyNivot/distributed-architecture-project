@@ -20,6 +20,7 @@
 # Table of content
 
 - [Installation](#installation)
+- [Run project](#scala-execution)
 - [Contributors](#contributors)
 
 <div id="installation">
@@ -40,7 +41,15 @@ First, download the following **[file](https://www.data.gouv.fr/fr/datasets/base
 
 Once you downloaded the file, place it at the root of the repository.
 
-## 
+</div>
+
+<div id="scala-execution">
+
+# Run project :arrow_forward:
+
+```bash
+spark-shell -i transData.scala --conf spark.driver.codenaf="56.10C"
+```
 
 </div>
 

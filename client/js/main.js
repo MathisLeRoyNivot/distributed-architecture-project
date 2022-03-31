@@ -21,9 +21,8 @@ const loadMap = (geoDATA, populationDATA, companyDATA) => {
     // Leaflet map
     const map = L.map("map").setView([47, 0], 6);
     const OpenStreetMap_Mapnik = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-        minZoom: 4,
-        maxZoom: 15,
-        noWrap: true,
+        minZoom: 3,
+        maxZoom: 15
     }).addTo(map);
 
     // Map popup
@@ -59,7 +58,7 @@ const loadMap = (geoDATA, populationDATA, companyDATA) => {
 }
 
 // Init
-loadFile("../../part-00000-fbb11be9-7a58-4e83-b967-e6bbb70fcedf-c000.csv", populationDATA => {
+loadFile("../../fastFoodByDep.csv", populationDATA => {
     loadFile("../../datacsv.csv/part-00000-4df33126-c631-4c31-b2f8-40d327863c7d-c000.csv", companyDATA => {
         loadFile("../../ressources/departements.geojson", geoDATA => {
             loadMap(
